@@ -6,13 +6,18 @@ import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApolloDriver } from '@nestjs/apollo';
+import { Member } from './member/entity/member.entity';
+
+function isProd(): boolean {
+  return process.env.NODE_ENV === 'prod';
+}
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.test.env',
-      ignoreEnvFile: process.env.NODE_ENV === 'prod',
+      ignoreEnvFile: isProd(),
       validationSchema: Joi.object({
         NODE_ENV: Joi.string().valid('dev', 'prod').required(),
         DB_HOST: Joi.string().required(),
@@ -24,8 +29,9 @@ import { ApolloDriver } from '@nestjs/apollo';
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      synchronize: true,
-      logging: true,
+      synchronize: !isProd(),
+      logging: !isProd(),
+      entities: [Member],
       host: process.env.DB_HOST,
       port: process.env.DB_PORT ? +process.env.DB_PORT : 5432,
       username: process.env.DB_USERNAME,

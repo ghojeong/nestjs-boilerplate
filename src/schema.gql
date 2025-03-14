@@ -3,6 +3,7 @@
 # ------------------------------------------------------
 
 type Member {
+  id: Float!
   name: String!
   isPrivate: Boolean
   address: String!
