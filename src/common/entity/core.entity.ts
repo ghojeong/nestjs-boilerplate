@@ -12,7 +12,7 @@ export class CoreEntity {
   id: number;
 
   @Field(() => Boolean)
-  @Column()
+  @Column({ default: false })
   isDeleted: boolean;
 
   @Field(() => Date)

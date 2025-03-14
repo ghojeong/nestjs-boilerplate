@@ -25,7 +25,7 @@ export class Member extends CoreEntity {
 
   @IsString()
   @Field(() => MemberRole, { defaultValue: MemberRole.FREE })
-  @Column({ type: 'enum', enum: MemberRole })
+  @Column({ type: 'enum', enum: MemberRole, default: MemberRole.FREE })
   role: MemberRole;
 
   @IsOptional()

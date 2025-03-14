@@ -14,7 +14,7 @@ enum MemberRole {
   PREMIUM
 }
 
-type CreateMemberOutput {
+type MutationOutput {
   ok: Boolean!
   error: String
 }
@@ -24,7 +24,7 @@ type Query {
 }
 
 type Mutation {
-  createMember(input: CreateMemberInput!): CreateMemberOutput!
+  createMember(input: CreateMemberInput!): MutationOutput!
   updateMember(id: Float!, data: UpdateMemberInputType!): Boolean!
 }
 
