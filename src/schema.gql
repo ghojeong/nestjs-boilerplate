@@ -12,7 +12,7 @@ type Member {
 }
 
 type Query {
-  members(userId: String!): [Member!]!
+  members: [Member!]!
 }
 
 type Mutation {
