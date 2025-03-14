@@ -8,7 +8,10 @@ export class MutationOutput {
   @Field(() => String, { nullable: true })
   error?: string;
 
-  static ok = (): MutationOutput => ({ ok: true });
+  static defaultOk = (): MutationOutput => ({ ok: true });
 
-  static error = (error?: string): MutationOutput => ({ ok: false, error });
+  static defaultError = (error?: string): MutationOutput => ({
+    ok: false,
+    error,
+  });
 }

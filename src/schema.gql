@@ -14,9 +14,15 @@ enum MemberRole {
   PREMIUM
 }
 
-type MutationOutput {
+type CreateMemberOutput {
   ok: Boolean!
   error: String
+}
+
+type LoginOutput {
+  ok: Boolean!
+  error: String
+  token: String
 }
 
 type Query {
@@ -24,11 +30,17 @@ type Query {
 }
 
 type Mutation {
-  createMember(input: CreateMemberInput!): MutationOutput!
+  createMember(input: CreateMemberInput!): CreateMemberOutput!
+  login(input: LoginInput!): LoginOutput!
   updateMember(id: Float!, data: UpdateMemberInputType!): Boolean!
 }
 
 input CreateMemberInput {
+  email: String!
+  password: String!
+}
+
+input LoginInput {
   email: String!
   password: String!
 }
