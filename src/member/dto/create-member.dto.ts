@@ -1,27 +1,5 @@
-import { ArgsType, Field } from '@nestjs/graphql';
-import { IsBoolean, IsString, Length } from 'class-validator';
+import { InputType, OmitType } from '@nestjs/graphql';
+import { Member } from '../entity/member.entity';
 
-@ArgsType()
-export class CreateMemberDto {
-  @Field(() => String)
-  @IsString()
-  userId: string;
-
-  @Field(() => Boolean)
-  @IsBoolean()
-  isPrivate: boolean;
-
-  @Field(() => String)
-  @IsString()
-  address: string;
-
-  @Field(() => String)
-  @IsString()
-  @Length(5, 10)
-  firstName: string;
-
-  @Field(() => String)
-  @IsString()
-  @Length(2, 8)
-  lastName: string;
-}
+@InputType()
+export class CreateMemberDto extends OmitType(Member, ['id'], InputType) {}

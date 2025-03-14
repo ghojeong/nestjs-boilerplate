@@ -13,7 +13,15 @@ export class MemberResolver {
   }
 
   @Mutation(() => Boolean)
-  createMember(@Args() dto: CreateMemberDto): boolean {
-    return true;
+  async createMember(
+    @Args('input') createMemberDto: CreateMemberDto,
+  ): Promise<boolean> {
+    try {
+      await this.memberService.createMember(createMemberDto);
+      return true;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
   }
 }

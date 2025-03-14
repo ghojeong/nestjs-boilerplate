@@ -4,10 +4,10 @@
 
 type Member {
   id: Float!
-  name: String!
+  name: String
   isPrivate: Boolean
   address: String!
-  fistName: String!
+  firstName: String!
   lastName: String!
 }
 
@@ -16,5 +16,13 @@ type Query {
 }
 
 type Mutation {
-  createMember(userId: String!, isPrivate: Boolean!, address: String!, firstName: String!, lastName: String!): Boolean!
+  createMember(input: CreateMemberDto!): Boolean!
+}
+
+input CreateMemberDto {
+  name: String = "anonymous"
+  isPrivate: Boolean = false
+  address: String!
+  firstName: String!
+  lastName: String!
 }
