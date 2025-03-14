@@ -2,9 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Member } from './entity/member.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateMemberInput } from './dto/create-member.dto';
+import { CreateMemberInput, CreateMemberOutput } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
-import { MutationOutput } from 'src/common/dto/output.dto';
 
 @Injectable()
 export class MemberService {
@@ -19,22 +18,22 @@ export class MemberService {
 
   async createMember(
     createMemberInput: CreateMemberInput,
-  ): Promise<MutationOutput> {
+  ): Promise<CreateMemberOutput> {
     try {
       if (
         await this.memberRepository.exists({
           where: { email: createMemberInput.email, isDeleted: false },
         })
       ) {
-        return MutationOutput.error('이미 존재하는 계정입니다.');
+        return CreateMemberOutput.error('이미 존재하는 계정입니다.');
       }
       await this.memberRepository.save(
         this.memberRepository.create(createMemberInput),
       );
-      return MutationOutput.ok();
+      return CreateMemberOutput.ok();
     } catch (e) {
       console.error(e);
-      return MutationOutput.error('계정 생성에 실패했습니다.');
+      return CreateMemberOutput.error('계정 생성에 실패했습니다.');
     }
   }
 

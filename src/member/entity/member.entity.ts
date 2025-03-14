@@ -1,7 +1,9 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { IsBoolean, IsOptional, IsString, Length } from 'class-validator';
 import { CoreEntity } from 'src/common/entity/core.entity';
-import { Column, Entity } from 'typeorm';
+import { BeforeInsert, Column, Entity } from 'typeorm';
+import * as bcrypt from 'bcrypt';
+import { InternalServerErrorException } from '@nestjs/common';
 
 enum MemberRole {
   FREE,
@@ -33,4 +35,14 @@ export class Member extends CoreEntity {
   @Field(() => Boolean, { nullable: true, defaultValue: false })
   @Column({ default: false })
   isPrivate: boolean;
+
+  @BeforeInsert()
+  async hashPassword(): Promise<void> {
+    try {
+      this.password = await bcrypt.hash(this.password, 10);
+    } catch (e) {
+      console.error(e);
+      throw new InternalServerErrorException(e);
+    }
+  }
 }
