@@ -1,0 +1,19 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Member {
+  name: String!
+  isPrivate: Boolean
+  address: String!
+  fistName: String!
+  lastName: String!
+}
+
+type Query {
+  members(userId: String!): [Member!]!
+}
+
+type Mutation {
+  createMember(userId: String!, isPrivate: Boolean!, address: String!, firstName: String!, lastName: String!): Boolean!
+}
