@@ -2,11 +2,12 @@ import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { MemberModule } from './member/member.module';
-import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApolloDriver } from '@nestjs/apollo';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { Member } from './member/entity/member.entity';
+import { CommonModule } from './common/common.module';
 
 function isProd(): boolean {
   return process.env.NODE_ENV === 'prod';
@@ -14,6 +15,10 @@ function isProd(): boolean {
 
 @Module({
   imports: [
+    GraphQLModule.forRoot({
+      driver: ApolloDriver,
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.test.env',
@@ -31,18 +36,15 @@ function isProd(): boolean {
       type: 'postgres',
       synchronize: !isProd(),
       logging: !isProd(),
-      entities: [Member],
       host: process.env.DB_HOST,
       port: process.env.DB_PORT ? +process.env.DB_PORT : 5432,
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-    }),
-    GraphQLModule.forRoot({
-      driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      entities: [Member],
     }),
     MemberModule,
+    CommonModule,
   ],
   controllers: [],
   providers: [],

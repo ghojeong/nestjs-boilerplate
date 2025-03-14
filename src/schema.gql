@@ -3,12 +3,20 @@
 # ------------------------------------------------------
 
 type Member {
-  id: Float!
-  name: String
+  email: String!
+  password: String!
+  role: MemberRole!
   isPrivate: Boolean
-  address: String!
-  firstName: String!
-  lastName: String!
+}
+
+enum MemberRole {
+  FREE
+  PREMIUM
+}
+
+type CreateMemberOutput {
+  ok: Boolean!
+  error: String
 }
 
 type Query {
@@ -16,22 +24,16 @@ type Query {
 }
 
 type Mutation {
-  createMember(input: CreateMemberDto!): Boolean!
+  createMember(input: CreateMemberInput!): CreateMemberOutput!
   updateMember(id: Float!, data: UpdateMemberInputType!): Boolean!
 }
 
-input CreateMemberDto {
-  name: String = "anonymous"
-  isPrivate: Boolean = false
-  address: String!
-  firstName: String!
-  lastName: String!
+input CreateMemberInput {
+  email: String!
+  password: String!
 }
 
 input UpdateMemberInputType {
-  name: String = "anonymous"
-  isPrivate: Boolean = false
-  address: String
-  firstName: String
-  lastName: String
+  email: String
+  password: String
 }

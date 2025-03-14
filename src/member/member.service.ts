@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Member } from './entity/member.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateMemberDto } from './dto/create-member.dto';
+import { CreateMemberInput } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
 
 @Injectable()
@@ -16,9 +16,9 @@ export class MemberService {
     return this.memberRepository.find();
   }
 
-  createMember(createMemberDto: CreateMemberDto): Promise<Member> {
+  createMember(createMemberInput: CreateMemberInput): Promise<Member> {
     return this.memberRepository.save(
-      this.memberRepository.create(createMemberDto),
+      this.memberRepository.create(createMemberInput),
     );
   }
 

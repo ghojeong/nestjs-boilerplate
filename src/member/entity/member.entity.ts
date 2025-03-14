@@ -1,46 +1,36 @@
-import { Field, ObjectType } from '@nestjs/graphql';
-import {
-  IsBoolean,
-  IsNumber,
-  IsOptional,
-  IsString,
-  Length,
-} from 'class-validator';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { IsBoolean, IsOptional, IsString, Length } from 'class-validator';
+import { CoreEntity } from 'src/common/entity/core.entity';
+import { Column, Entity } from 'typeorm';
+
+enum MemberRole {
+  FREE,
+  PREMIUM,
+}
+registerEnumType(MemberRole, { name: 'MemberRole' });
 
 @ObjectType()
 @Entity()
-export class Member {
-  @IsNumber()
-  @Field(() => Number)
-  @PrimaryGeneratedColumn()
-  id: number;
+export class Member extends CoreEntity {
+  @IsString()
+  @Length(3, 100)
+  @Field(() => String)
+  @Column()
+  email: string;
 
   @IsString()
-  @Field(() => String, { nullable: true, defaultValue: 'anonymous' })
+  @Field(() => String)
   @Column()
-  name: string;
+  password: string;
+
+  @IsString()
+  @Field(() => MemberRole, { defaultValue: MemberRole.FREE })
+  @Column({ type: 'enum', enum: MemberRole })
+  role: MemberRole;
 
   @IsOptional()
   @IsBoolean()
   @Field(() => Boolean, { nullable: true, defaultValue: false })
   @Column({ default: false })
   isPrivate: boolean;
-
-  @IsString()
-  @Field(() => String)
-  @Column()
-  address: string;
-
-  @IsString()
-  @Length(5, 10)
-  @Field(() => String)
-  @Column()
-  firstName: string;
-
-  @IsString()
-  @Length(2, 8)
-  @Field(() => String)
-  @Column()
-  lastName: string;
 }

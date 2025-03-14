@@ -1,6 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Member } from './entity/member.entity';
-import { CreateMemberDto } from './dto/create-member.dto';
+import { CreateMemberInput, CreateMemberOutput } from './dto/create-member.dto';
 import { MemberService } from './member.service';
 import { UpdateMemberDto } from './dto/update-member.dto';
 
@@ -13,15 +13,15 @@ export class MemberResolver {
     return this.memberService.getAll();
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => CreateMemberOutput)
   async createMember(
-    @Args('input') createMemberDto: CreateMemberDto,
+    @Args('input') createMemberInput: CreateMemberInput,
   ): Promise<boolean> {
     try {
-      await this.memberService.createMember(createMemberDto);
+      await this.memberService.createMember(createMemberInput);
       return true;
     } catch (e) {
-      console.log(e);
+      console.error(e);
       return false;
     }
   }
@@ -34,7 +34,7 @@ export class MemberResolver {
       await this.memberService.updateMember(updateMemberDto);
       return true;
     } catch (e) {
-      console.log(e);
+      console.error(e);
       return false;
     }
   }
