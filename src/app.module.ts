@@ -20,6 +20,10 @@ function isDeployable(): boolean {
   return ['prod', 'stage'].some((env) => env === process.env.NODE_ENV);
 }
 
+function isLogging(): boolean {
+  return process.env.NODE_ENV !== 'test';
+}
+
 @Module({
   imports: [
     GraphQLModule.forRoot({
@@ -29,10 +33,10 @@ function isDeployable(): boolean {
     ConfigModule.forRoot({
       cache: true,
       isGlobal: true,
-      envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.test.env',
+      envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.test',
       ignoreEnvFile: isDeployable(),
       validationSchema: Joi.object({
-        NODE_ENV: Joi.string().valid('dev', 'prod').required(),
+        NODE_ENV: Joi.string().valid('dev', 'prod', 'test').required(),
         DB_HOST: Joi.string().required(),
         DB_PORT: Joi.number().required(),
         DB_USERNAME: Joi.string().required(),
@@ -44,7 +48,7 @@ function isDeployable(): boolean {
     TypeOrmModule.forRoot({
       type: 'postgres',
       synchronize: !isDeployable(),
-      logging: !isDeployable(),
+      logging: isLogging(),
       host: process.env.DB_HOST,
       port: process.env.DB_PORT ? +process.env.DB_PORT : 5432,
       username: process.env.DB_USERNAME,

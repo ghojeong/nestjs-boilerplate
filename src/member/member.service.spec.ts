@@ -77,7 +77,6 @@ describe('UserService', () => {
     });
   });
 
-  it.todo('createMember');
   it.todo('login');
   it.todo('findById');
   it.todo('editProfile');
