@@ -1,14 +1,25 @@
-import { ArgsType, Field, InputType, PartialType } from '@nestjs/graphql';
+import { InputType, ObjectType, PartialType, PickType } from '@nestjs/graphql';
 import { CreateMemberInput } from './create-member.dto';
+import { CoreOutput } from 'src/common/dto/core-output.dto';
 
 @InputType()
-class UpdateMemberInputType extends PartialType(CreateMemberInput) {}
+export class EditProfileInput extends PartialType(
+  PickType(CreateMemberInput, ['email']),
+) {}
 
-@ArgsType()
-export class UpdateMemberDto {
-  @Field(() => Number)
-  id: number;
+@ObjectType()
+export class EditProfileOutput extends CoreOutput {
+  static ok = CoreOutput.defaultOk;
+  static error = CoreOutput.defaultError;
+}
 
-  @Field(() => UpdateMemberInputType)
-  data: UpdateMemberInputType;
+@InputType()
+export class ChangePasswordInput extends PartialType(
+  PickType(CreateMemberInput, ['password']),
+) {}
+
+@ObjectType()
+export class ChangePasswordOutput extends CoreOutput {
+  static ok = CoreOutput.defaultOk;
+  static error = CoreOutput.defaultError;
 }

@@ -3,7 +3,12 @@ import { Member } from './entity/member.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateMemberInput, CreateMemberOutput } from './dto/create-member.dto';
-import { UpdateMemberDto } from './dto/update-member.dto';
+import {
+  ChangePasswordInput,
+  ChangePasswordOutput,
+  EditProfileInput,
+  EditProfileOutput,
+} from './dto/update-member.dto';
 import { LoginInput, LoginOutput } from './dto/login.dto';
 import { AuthService } from 'src/auth/auth.service';
 import { MemberProfileOutput } from './dto/member-profile.dto';
@@ -69,7 +74,33 @@ export class MemberService {
     }
   }
 
-  async updateMember({ id, data }: UpdateMemberDto) {
-    return await this.memberRepository.update(id, data);
+  async editProfile(
+    me: Member,
+    input: EditProfileInput,
+  ): Promise<EditProfileOutput> {
+    try {
+      await this.memberRepository.update(me.id, input);
+      return EditProfileOutput.ok();
+    } catch (e) {
+      console.error(e);
+      return EditProfileOutput.error('프로필 변경에 실패했습니다.');
+    }
+  }
+
+  async changePassword(
+    me: Member,
+    { password }: ChangePasswordInput,
+  ): Promise<ChangePasswordOutput> {
+    try {
+      if (password) {
+        me.password = password;
+        await this.memberRepository.save(me);
+        return ChangePasswordOutput.ok();
+      }
+      return ChangePasswordOutput.error('잘못된 비밀번호 입니다.');
+    } catch (e) {
+      console.error(e);
+      return ChangePasswordOutput.error('프로필 변경에 실패했습니다.');
+    }
   }
 }

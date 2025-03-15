@@ -28,6 +28,16 @@ type CreateMemberOutput {
   error: String
 }
 
+type EditProfileOutput {
+  ok: Boolean!
+  error: String
+}
+
+type ChangePasswordOutput {
+  ok: Boolean!
+  error: String
+}
+
 type LoginOutput {
   ok: Boolean!
   error: String
@@ -55,7 +65,8 @@ type Query {
 type Mutation {
   createMember(input: CreateMemberInput!): CreateMemberOutput!
   login(input: LoginInput!): LoginOutput!
-  updateMember(id: Float!, data: UpdateMemberInputType!): Boolean!
+  editProfile(input: EditProfileInput!): EditProfileOutput!
+  changePassword(input: ChangePasswordInput!): ChangePasswordOutput!
 }
 
 input CreateMemberInput {
@@ -68,7 +79,10 @@ input LoginInput {
   password: String!
 }
 
-input UpdateMemberInputType {
+input EditProfileInput {
   email: String
+}
+
+input ChangePasswordInput {
   password: String
 }
