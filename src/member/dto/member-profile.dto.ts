@@ -1,6 +1,4 @@
-import { ArgsType, Field, ObjectType } from '@nestjs/graphql';
-import { CoreOutput } from 'src/common/dto/core-output.dto';
-import { Member } from '../entity/member.entity';
+import { ArgsType, Field, ObjectType, PickType } from '@nestjs/graphql';
 import { MemberOutput } from './member.dto';
 
 @ArgsType()
@@ -10,10 +8,9 @@ export class MemberProfileInput {
 }
 
 @ObjectType()
-export class MemberProfileOutput extends CoreOutput {
-  @Field(() => MemberOutput)
-  member?: MemberOutput;
-
-  static ok = (member: Member): MemberProfileOutput => ({ ok: true, member });
-  static error = CoreOutput.defaultError;
-}
+export class MemberProfileOutput extends PickType(MemberOutput, [
+  'id',
+  'email',
+  'role',
+  'isPrivate',
+]) {}

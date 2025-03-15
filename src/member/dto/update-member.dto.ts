@@ -1,6 +1,6 @@
 import { InputType, ObjectType, PartialType, PickType } from '@nestjs/graphql';
 import { CreateMemberInput } from './create-member.dto';
-import { CoreOutput } from 'src/common/dto/core-output.dto';
+import { MutationOutput } from 'src/common/dto/core-output.dto';
 
 @InputType()
 export class EditProfileInput extends PartialType(
@@ -8,9 +8,9 @@ export class EditProfileInput extends PartialType(
 ) {}
 
 @ObjectType()
-export class EditProfileOutput extends CoreOutput {
-  static ok = CoreOutput.defaultOk;
-  static error = CoreOutput.defaultError;
+export class EditProfileOutput extends MutationOutput {
+  static ok = MutationOutput.defaultOk;
+  static error = MutationOutput.defaultError;
 }
 
 @InputType()
@@ -19,7 +19,7 @@ export class ChangePasswordInput extends PartialType(
 ) {}
 
 @ObjectType()
-export class ChangePasswordOutput extends CoreOutput {
-  static ok = CoreOutput.defaultOk;
-  static error = CoreOutput.defaultError;
+export class ChangePasswordOutput extends MutationOutput {
+  static ok = MutationOutput.defaultOk;
+  static error = MutationOutput.defaultError;
 }

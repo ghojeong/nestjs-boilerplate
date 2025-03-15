@@ -1,6 +1,6 @@
 import { InputType, ObjectType, PickType } from '@nestjs/graphql';
 import { Member } from '../entity/member.entity';
-import { CoreOutput } from 'src/common/dto/core-output.dto';
+import { MutationOutput } from 'src/common/dto/core-output.dto';
 
 @InputType()
 export class CreateMemberInput extends PickType(
@@ -10,7 +10,7 @@ export class CreateMemberInput extends PickType(
 ) {}
 
 @ObjectType()
-export class CreateMemberOutput extends CoreOutput {
-  static ok = CoreOutput.defaultOk;
-  static error = CoreOutput.defaultError;
+export class CreateMemberOutput extends MutationOutput {
+  static ok = MutationOutput.defaultOk;
+  static error = MutationOutput.defaultError;
 }

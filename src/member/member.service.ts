@@ -53,7 +53,7 @@ export class MemberService {
     if (!member) {
       throw new NotFoundException();
     }
-    return MemberProfileOutput.ok(member);
+    return member;
   }
 
   async login({ email, password }: LoginInput): Promise<LoginOutput> {

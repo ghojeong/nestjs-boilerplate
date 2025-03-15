@@ -44,17 +44,11 @@ type LoginOutput {
   token: String
 }
 
-type MemberOutput {
+type MemberProfileOutput {
   id: Float!
   email: String!
   role: MemberRole!
   isPrivate: Boolean
-}
-
-type MemberProfileOutput {
-  ok: Boolean!
-  error: String
-  member: MemberOutput!
 }
 
 type Query {
