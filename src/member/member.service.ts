@@ -40,18 +40,24 @@ export class MemberService {
     }
   }
 
+  async findById(id: number): Promise<Member | null> {
+    return await this.memberRepository.findOne({
+      where: { id, isDeleted: false },
+    });
+  }
+
   async login({ email, password }: LoginInput): Promise<LoginOutput> {
     try {
-      const user = await this.memberRepository.findOne({
+      const member = await this.memberRepository.findOne({
         where: { email, isDeleted: false },
       });
-      if (!user?.id) {
+      if (!member?.id) {
         return LoginOutput.error('회원가입되어 있지 않은 계정입니다.');
       }
-      if (!(await user.checkPassword(password))) {
+      if (!(await member.checkPassword(password))) {
         return LoginOutput.error('잘못된 비밀번호입니다.');
       }
-      return LoginOutput.ok(this.auth.sign({ id: user.id }));
+      return LoginOutput.ok(this.auth.sign(member.id));
     } catch (e) {
       console.error(e);
       return LoginOutput.error('로그인에 실패했습니다.');

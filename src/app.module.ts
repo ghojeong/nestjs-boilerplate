@@ -1,4 +1,9 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { MemberModule } from './member/member.module';
@@ -9,6 +14,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Member } from './member/entity/member.entity';
 import { CommonModule } from './common/common.module';
 import { AuthModule } from './auth/auth.module';
+import { AuthMiddleware } from './auth/auth.middleware';
 
 function isDeployable(): boolean {
   return ['prod', 'stage'].some((env) => env === process.env.NODE_ENV);
@@ -53,4 +59,11 @@ function isDeployable(): boolean {
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AuthMiddleware).forRoutes({
+      path: '/graphql',
+      method: RequestMethod.ALL,
+    });
+  }
+}

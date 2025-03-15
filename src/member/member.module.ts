@@ -7,5 +7,6 @@ import { MemberService } from './member.service';
 @Module({
   imports: [TypeOrmModule.forFeature([Member])],
   providers: [MemberResolver, MemberService],
+  exports: [MemberService],
 })
 export class MemberModule {}

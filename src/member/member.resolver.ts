@@ -14,6 +14,9 @@ export class MemberResolver {
     return this.memberService.getAll();
   }
 
+  @Query(() => Member)
+  myInfo() {}
+
   @Mutation(() => CreateMemberOutput)
   async createMember(
     @Args('input') createMemberInput: CreateMemberInput,
