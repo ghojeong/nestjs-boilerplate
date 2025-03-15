@@ -15,8 +15,8 @@ export class MemberService {
     private readonly auth: AuthService,
   ) {}
 
-  getAll(): Promise<Member[]> {
-    return this.memberRepository.find();
+  async getAll(): Promise<Member[]> {
+    return await this.memberRepository.find();
   }
 
   async createMember(
@@ -64,7 +64,7 @@ export class MemberService {
     }
   }
 
-  updateMember({ id, data }: UpdateMemberDto) {
-    return this.memberRepository.update(id, data);
+  async updateMember({ id, data }: UpdateMemberDto) {
+    return await this.memberRepository.update(id, data);
   }
 }

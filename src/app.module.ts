@@ -15,6 +15,7 @@ import { Member } from './member/entity/member.entity';
 import { CommonModule } from './common/common.module';
 import { AuthModule } from './auth/auth.module';
 import { AuthMiddleware } from './auth/auth.middleware';
+import { AUTH_ME } from './auth/auth.constants';
 
 function isDeployable(): boolean {
   return ['prod', 'stage'].some((env) => env === process.env.NODE_ENV);
@@ -25,6 +26,7 @@ function isDeployable(): boolean {
     GraphQLModule.forRoot({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      context: ({ req }) => ({ member: req[AUTH_ME] }),
     }),
     ConfigModule.forRoot({
       cache: true,

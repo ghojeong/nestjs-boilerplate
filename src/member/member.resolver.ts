@@ -1,9 +1,12 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Member } from './entity/member.entity';
 import { CreateMemberInput, CreateMemberOutput } from './dto/create-member.dto';
 import { MemberService } from './member.service';
 import { UpdateMemberDto } from './dto/update-member.dto';
 import { LoginInput, LoginOutput } from './dto/login.dto';
+import { FetchMemberOutput } from './dto/fetch-member.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { UseGuards } from '@nestjs/common';
 
 @Resolver(() => Member)
 export class MemberResolver {
@@ -15,7 +18,10 @@ export class MemberResolver {
   }
 
   @Query(() => Member)
-  myInfo() {}
+  @UseGuards(AuthGuard)
+  myInfo(@Context() context): FetchMemberOutput {
+    return context.member as Member;
+  }
 
   @Mutation(() => CreateMemberOutput)
   async createMember(
