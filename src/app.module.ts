@@ -20,6 +20,7 @@ function isProd(): boolean {
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
     }),
     ConfigModule.forRoot({
+      cache: true,
       isGlobal: true,
       envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.test.env',
       ignoreEnvFile: isProd(),
@@ -30,6 +31,7 @@ function isProd(): boolean {
         DB_USERNAME: Joi.string().required(),
         DB_PASSWORD: Joi.string().required(),
         DB_NAME: Joi.string().required(),
+        TOKEN_SECRET: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRoot({
