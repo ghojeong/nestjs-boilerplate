@@ -1,6 +1,6 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { Member } from 'src/member/entity/member.entity';
-import { AUTH_MEMBER } from './auth.constants';
+import { AUTH_MEMBER } from './auth.constant';
 import { GqlExecutionContext } from '@nestjs/graphql';
 
 export const AuthMember = createParamDecorator(

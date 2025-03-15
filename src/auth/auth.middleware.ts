@@ -4,7 +4,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { NextFunction } from 'express';
-import { AUTH_HEADER, AUTH_MEMBER } from './auth.constants';
+import { AUTH_HEADER, AUTH_MEMBER } from './auth.constant';
 import { AuthService } from './auth.service';
 import { MemberService } from 'src/member/member.service';
 

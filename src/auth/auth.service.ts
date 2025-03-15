@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
-import { PRIVATE_KEY } from './auth.constants';
+import { PRIVATE_KEY } from './auth.constant';
 import { AuthPayload } from './auth.interface';
 
 @Injectable()
