@@ -23,7 +23,6 @@ enum MemberRole {
 }
 registerEnumType(MemberRole, { name: 'MemberRole' });
 
-@InputType({ isAbstract: true })
 @ObjectType()
 @Entity()
 export class Member extends CoreEntity {

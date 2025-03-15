@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Member } from './entity/member.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -6,6 +6,7 @@ import { CreateMemberInput, CreateMemberOutput } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
 import { LoginInput, LoginOutput } from './dto/login.dto';
 import { AuthService } from 'src/auth/auth.service';
+import { MemberProfileOutput } from './dto/member-profile.dto';
 
 @Injectable()
 export class MemberService {
@@ -14,10 +15,6 @@ export class MemberService {
     private readonly memberRepository: Repository<Member>,
     private readonly auth: AuthService,
   ) {}
-
-  async getAll(): Promise<Member[]> {
-    return await this.memberRepository.find();
-  }
 
   async createMember(
     createMemberInput: CreateMemberInput,
@@ -44,6 +41,14 @@ export class MemberService {
     return await this.memberRepository.findOne({
       where: { id, isDeleted: false },
     });
+  }
+
+  async findProfileById(id: number): Promise<MemberProfileOutput> {
+    const member = await this.findById(id);
+    if (!member) {
+      throw new NotFoundException();
+    }
+    return MemberProfileOutput.ok(member);
   }
 
   async login({ email, password }: LoginInput): Promise<LoginOutput> {

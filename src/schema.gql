@@ -3,11 +3,20 @@
 # ------------------------------------------------------
 
 type Member {
+  id: Float!
+  isDeleted: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   email: String!
   password: String!
   role: MemberRole!
   isPrivate: Boolean
 }
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 enum MemberRole {
   FREE
@@ -25,9 +34,22 @@ type LoginOutput {
   token: String
 }
 
+type MemberOutput {
+  id: Float!
+  email: String!
+  role: MemberRole!
+  isPrivate: Boolean
+}
+
+type MemberProfileOutput {
+  ok: Boolean!
+  error: String
+  member: MemberOutput!
+}
+
 type Query {
-  members: [Member!]!
   me: Member!
+  memberProfile(memberId: Float!): MemberProfileOutput!
 }
 
 type Mutation {
