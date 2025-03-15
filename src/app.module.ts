@@ -8,9 +8,10 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Member } from './member/entity/member.entity';
 import { CommonModule } from './common/common.module';
+import { AuthModule } from './auth/auth.module';
 
-function isProd(): boolean {
-  return process.env.NODE_ENV === 'prod';
+function isDeployable(): boolean {
+  return ['prod', 'stage'].some((env) => env === process.env.NODE_ENV);
 }
 
 @Module({
@@ -23,7 +24,7 @@ function isProd(): boolean {
       cache: true,
       isGlobal: true,
       envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.test.env',
-      ignoreEnvFile: isProd(),
+      ignoreEnvFile: isDeployable(),
       validationSchema: Joi.object({
         NODE_ENV: Joi.string().valid('dev', 'prod').required(),
         DB_HOST: Joi.string().required(),
@@ -36,8 +37,8 @@ function isProd(): boolean {
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      synchronize: !isProd(),
-      logging: !isProd(),
+      synchronize: !isDeployable(),
+      logging: !isDeployable(),
       host: process.env.DB_HOST,
       port: process.env.DB_PORT ? +process.env.DB_PORT : 5432,
       username: process.env.DB_USERNAME,
@@ -45,6 +46,7 @@ function isProd(): boolean {
       database: process.env.DB_NAME,
       entities: [Member],
     }),
+    AuthModule.forRoot({ privateKey: process.env.TOKEN_SECRET as string }),
     MemberModule,
     CommonModule,
   ],

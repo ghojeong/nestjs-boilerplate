@@ -2,18 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { Member } from './entity/member.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import * as jwt from 'jsonwebtoken';
 import { CreateMemberInput, CreateMemberOutput } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
 import { LoginInput, LoginOutput } from './dto/login.dto';
-import { ConfigService } from '@nestjs/config';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class MemberService {
   constructor(
     @InjectRepository(Member)
     private readonly memberRepository: Repository<Member>,
-    private readonly config: ConfigService,
+    private readonly auth: AuthService,
   ) {}
 
   getAll(): Promise<Member[]> {
@@ -52,9 +51,7 @@ export class MemberService {
       if (!(await user.checkPassword(password))) {
         return LoginOutput.error('잘못된 비밀번호입니다.');
       }
-      return LoginOutput.ok(
-        jwt.sign({ id: user.id }, this.config.get('TOKEN_SECRET') as string),
-      );
+      return LoginOutput.ok(this.auth.sign({ id: user.id }));
     } catch (e) {
       console.error(e);
       return LoginOutput.error('로그인에 실패했습니다.');
