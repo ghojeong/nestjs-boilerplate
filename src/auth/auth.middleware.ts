@@ -4,7 +4,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { NextFunction } from 'express';
-import { AUTH_HEADER, AUTH_ME } from './auth.constants';
+import { AUTH_HEADER, AUTH_MEMBER } from './auth.constants';
 import { AuthService } from './auth.service';
 import { MemberService } from 'src/member/member.service';
 
@@ -24,7 +24,7 @@ export class AuthMiddleware implements NestMiddleware {
       const memberId = this.authService.verify(
         req.headers[AUTH_HEADER] as string,
       ).id;
-      req[AUTH_ME] = await this.memberService.findById(memberId);
+      req[AUTH_MEMBER] = await this.memberService.findById(memberId);
     } catch (e) {
       console.error(e);
       throw new UnauthorizedException(e);

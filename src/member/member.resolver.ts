@@ -7,6 +7,7 @@ import { LoginInput, LoginOutput } from './dto/login.dto';
 import { FetchMemberOutput } from './dto/fetch-member.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { UseGuards } from '@nestjs/common';
+import { AuthMember } from 'src/auth/auth.decorator';
 
 @Resolver(() => Member)
 export class MemberResolver {
@@ -19,8 +20,8 @@ export class MemberResolver {
 
   @Query(() => Member)
   @UseGuards(AuthGuard)
-  myInfo(@Context() context): FetchMemberOutput {
-    return context.member as Member;
+  me(@AuthMember() me: Member): FetchMemberOutput {
+    return me;
   }
 
   @Mutation(() => CreateMemberOutput)

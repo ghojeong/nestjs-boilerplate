@@ -27,7 +27,7 @@ type LoginOutput {
 
 type Query {
   members: [Member!]!
-  myInfo: Member!
+  me: Member!
 }
 
 type Mutation {
