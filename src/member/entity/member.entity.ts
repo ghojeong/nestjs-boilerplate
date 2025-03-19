@@ -1,4 +1,9 @@
-import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import {
+  Field,
+  InputType,
+  ObjectType,
+  registerEnumType,
+} from '@nestjs/graphql';
 import {
   IsBoolean,
   IsEmail,
@@ -13,11 +18,12 @@ import * as bcrypt from 'bcrypt';
 import { InternalServerErrorException } from '@nestjs/common';
 
 enum MemberRole {
-  FREE,
-  PREMIUM,
+  FREE = 'FREE',
+  PREMIUM = 'PREMIUM',
 }
 registerEnumType(MemberRole, { name: 'MemberRole' });
 
+@InputType({ isAbstract: true })
 @ObjectType()
 @Entity()
 export class Member extends CoreEntity {
@@ -39,9 +45,9 @@ export class Member extends CoreEntity {
 
   @IsOptional()
   @IsBoolean()
-  @Field(() => Boolean, { nullable: true, defaultValue: false })
+  @Field(() => Boolean, { defaultValue: false })
   @Column({ default: false })
-  isPrivate: boolean;
+  verified: boolean;
 
   @BeforeInsert()
   @BeforeUpdate()

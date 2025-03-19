@@ -10,7 +10,7 @@ type Member {
   email: String!
   password: String!
   role: MemberRole!
-  isPrivate: Boolean
+  verified: Boolean!
 }
 
 """
@@ -48,7 +48,6 @@ type MemberProfileOutput {
   id: Float!
   email: String!
   role: MemberRole!
-  isPrivate: Boolean
 }
 
 type Query {

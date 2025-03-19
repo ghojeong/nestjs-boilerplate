@@ -12,5 +12,4 @@ export class MemberProfileOutput extends PickType(MemberOutput, [
   'id',
   'email',
   'role',
-  'isPrivate',
 ]) {}
