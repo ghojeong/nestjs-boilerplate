@@ -12,12 +12,15 @@ import {
 import { LoginInput, LoginOutput } from './dto/login.dto';
 import { AuthService } from 'src/auth/auth.service';
 import { MemberProfileOutput } from './dto/member-profile.dto';
+import { Verification } from './entity/verification.entity';
 
 @Injectable()
 export class MemberService {
   constructor(
     @InjectRepository(Member)
     private readonly memberRepository: Repository<Member>,
+    @InjectRepository(Verification)
+    private readonly verificationRepository: Repository<Verification>,
     private readonly auth: AuthService,
   ) {}
 
@@ -32,8 +35,11 @@ export class MemberService {
       ) {
         return CreateMemberOutput.error('이미 존재하는 계정입니다.');
       }
-      await this.memberRepository.save(
+      const member = await this.memberRepository.save(
         this.memberRepository.create(createMemberInput),
+      );
+      await this.verificationRepository.save(
+        this.verificationRepository.create({ member }),
       );
       return CreateMemberOutput.ok();
     } catch (e) {
@@ -76,10 +82,17 @@ export class MemberService {
 
   async editProfile(
     me: Member,
-    input: EditProfileInput,
+    { email }: EditProfileInput,
   ): Promise<EditProfileOutput> {
+    if (!email) {
+      return EditProfileOutput.ok();
+    }
     try {
-      await this.memberRepository.update(me.id, input);
+      me.setEmail(email);
+      await this.verificationRepository.save(
+        this.verificationRepository.create({ member: me }),
+      );
+      this.memberRepository.save(me);
       return EditProfileOutput.ok();
     } catch (e) {
       console.error(e);

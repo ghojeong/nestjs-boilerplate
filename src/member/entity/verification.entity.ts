@@ -1,7 +1,7 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
-import { IsString, Length } from 'class-validator';
+import { IsString } from 'class-validator';
 import { CoreEntity } from 'src/common/entity/core.entity';
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import { BeforeInsert, Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 import { Member } from './member.entity';
 
 @InputType({ isAbstract: true })
@@ -16,4 +16,9 @@ export class Verification extends CoreEntity {
   @OneToOne(() => Member)
   @JoinColumn()
   member: Member;
+
+  @BeforeInsert()
+  createCode(): void {
+    this.code = Math.random().toString(36).substring(2);
+  }
 }

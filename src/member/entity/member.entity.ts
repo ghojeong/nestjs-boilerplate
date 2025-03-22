@@ -49,6 +49,11 @@ export class Member extends CoreEntity {
   @Column({ default: false })
   verified: boolean;
 
+  setEmail(email: string) {
+    this.email = email;
+    this.verified = false;
+  }
+
   @BeforeInsert()
   @BeforeUpdate()
   async hashPassword(): Promise<void> {
