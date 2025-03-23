@@ -2,35 +2,53 @@ import { Inject, Injectable } from '@nestjs/common';
 import * as FormData from 'form-data';
 import got from 'got';
 import { CONFIG_OPTIONS } from 'src/common/common.constants';
-import { MailModuleOptions } from './mail.interface';
+import { EmailVar, MailModuleOptions } from './mail.interface';
 
 @Injectable()
 export class MailService {
   constructor(
     @Inject(CONFIG_OPTIONS) private readonly options: MailModuleOptions,
+  ) {}
+
+  sendVerificationEmail(
+    memberName: string,
+    memberEmail: string,
+    memberCode: string,
   ) {
-    this.sendEmail('rhwjddhks@gmail.com', 'Hello', 'World');
+    this.sendEmail(memberEmail, 'Verify Your Email', 'verify-email', [
+      { key: 'memberName', value: memberName },
+      { key: 'code', value: memberCode },
+    ]);
   }
 
-  private async sendEmail(toEmail: string, subject: string, content: string) {
+  private async sendEmail(
+    toEmail: string,
+    subject: string,
+    template: string,
+    emailVars: EmailVar[],
+  ) {
     const body = new FormData();
     body.append(
       'from',
-      `Mailgun Sandbox <postmaster@${this.options.domainName}>`,
+      `ghojeong Test Email <postmaster@${this.options.domainName}>`,
     );
     body.append('to', toEmail);
     body.append('subject', subject);
-    body.append('text', content);
-    const response = await got(
-      `https://api.mailgun.net/v3/${this.options.domainName}/messages`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Basic ${Buffer.from(`api:${this.options.apiKey}`).toString('base64')}`,
+    body.append('template', template);
+    emailVars.forEach(({ key, value }) => body.append(`v:${key}`, value));
+    try {
+      await got(
+        `https://api.mailgun.net/v3/${this.options.domainName}/messages`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Basic ${Buffer.from(`api:${this.options.apiKey}`).toString('base64')}`,
+          },
+          body,
         },
-        body,
-      },
-    );
-    console.log(response.body);
+      );
+    } catch (e) {
+      console.error(e);
+    }
   }
 }

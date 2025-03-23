@@ -14,6 +14,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { MemberProfileOutput } from './dto/member-profile.dto';
 import { Verification } from './entity/verification.entity';
 import { VerifyEmailOutput } from './dto/verify-email.dto';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class MemberService {
@@ -22,7 +23,8 @@ export class MemberService {
     private readonly memberRepository: Repository<Member>,
     @InjectRepository(Verification)
     private readonly verificationRepository: Repository<Verification>,
-    private readonly auth: AuthService,
+    private readonly authService: AuthService,
+    private readonly mailService: MailService,
   ) {}
 
   async createMember(
@@ -39,9 +41,10 @@ export class MemberService {
       const member = await this.memberRepository.save(
         this.memberRepository.create(createMemberInput),
       );
-      await this.verificationRepository.save(
+      const { code } = await this.verificationRepository.save(
         this.verificationRepository.create({ member }),
       );
+      this.mailService.sendVerificationEmail(member.email, member.email, code);
       return CreateMemberOutput.ok();
     } catch (e) {
       console.error(e);
@@ -75,7 +78,7 @@ export class MemberService {
       if (!(await member.checkPassword(password))) {
         return LoginOutput.error('잘못된 비밀번호입니다.');
       }
-      return LoginOutput.ok(this.auth.sign(member.id));
+      return LoginOutput.ok(this.authService.sign(member.id));
     } catch (e) {
       console.error(e);
       return LoginOutput.error('로그인에 실패했습니다.');
@@ -91,9 +94,10 @@ export class MemberService {
     }
     try {
       me.setEmail(email);
-      await this.verificationRepository.save(
+      const { code } = await this.verificationRepository.save(
         this.verificationRepository.create({ member: me }),
       );
+      this.mailService.sendVerificationEmail(email, email, code);
       this.memberRepository.save(me);
       return EditProfileOutput.ok();
     } catch (e) {
