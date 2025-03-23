@@ -16,6 +16,7 @@ import { CommonModule } from './common/common.module';
 import { AuthModule } from './auth/auth.module';
 import { AuthMiddleware } from './auth/auth.middleware';
 import { Verification } from './member/entity/verification.entity';
+import { MailModule } from './mail/mail.module';
 
 function isDeployable(): boolean {
   return ['prod', 'stage'].some((env) => env === process.env.NODE_ENV);
@@ -44,6 +45,9 @@ function isLogging(): boolean {
         DB_PASSWORD: Joi.string().required(),
         DB_NAME: Joi.string().required(),
         TOKEN_SECRET: Joi.string().required(),
+        MAILGUN_API_KEY: Joi.string().required(),
+        MAILGUN_DOMAIN_NAME: Joi.string().required(),
+        MAILGUN_FROM_EMAIL: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRoot({
@@ -58,6 +62,11 @@ function isLogging(): boolean {
       entities: [Member, Verification],
     }),
     AuthModule.forRoot({ privateKey: process.env.TOKEN_SECRET as string }),
+    MailModule.forRoot({
+      apiKey: process.env.MAILGUN_API_KEY as string,
+      domainName: process.env.MAILGUN_DOMAIN_NAME as string,
+      fromEmail: process.env.MAILGUN_FROM_EMAIL as string,
+    }),
     MemberModule,
     CommonModule,
   ],
