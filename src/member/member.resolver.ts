@@ -16,6 +16,7 @@ import {
   MemberProfileInput,
   MemberProfileOutput,
 } from './dto/member-profile.dto';
+import { VerifyEmailInput, VerifyEmailOutput } from './dto/verify-email.dto';
 
 @Resolver(() => Member)
 export class MemberResolver {
@@ -63,5 +64,12 @@ export class MemberResolver {
     @Args('input') input: ChangePasswordInput,
   ): Promise<ChangePasswordOutput> {
     return await this.memberService.changePassword(me, input);
+  }
+
+  @Mutation(() => VerifyEmailOutput)
+  async verifyEmail(
+    @Args('input') { code }: VerifyEmailInput,
+  ): Promise<VerifyEmailOutput> {
+    return await this.memberService.verifyEmail(code);
   }
 }

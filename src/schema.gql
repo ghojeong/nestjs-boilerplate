@@ -44,6 +44,11 @@ type LoginOutput {
   token: String
 }
 
+type VerifyEmailOutput {
+  ok: Boolean!
+  error: String
+}
+
 type MemberProfileOutput {
   id: Float!
   email: String!
@@ -60,6 +65,7 @@ type Mutation {
   login(input: LoginInput!): LoginOutput!
   editProfile(input: EditProfileInput!): EditProfileOutput!
   changePassword(input: ChangePasswordInput!): ChangePasswordOutput!
+  verifyEmail(input: VerifyEmailInput!): VerifyEmailOutput!
 }
 
 input CreateMemberInput {
@@ -78,4 +84,8 @@ input EditProfileInput {
 
 input ChangePasswordInput {
   password: String
+}
+
+input VerifyEmailInput {
+  code: String!
 }

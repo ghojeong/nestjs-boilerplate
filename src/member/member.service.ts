@@ -13,6 +13,7 @@ import { LoginInput, LoginOutput } from './dto/login.dto';
 import { AuthService } from 'src/auth/auth.service';
 import { MemberProfileOutput } from './dto/member-profile.dto';
 import { Verification } from './entity/verification.entity';
+import { VerifyEmailOutput } from './dto/verify-email.dto';
 
 @Injectable()
 export class MemberService {
@@ -115,5 +116,23 @@ export class MemberService {
       console.error(e);
       return ChangePasswordOutput.error('프로필 변경에 실패했습니다.');
     }
+  }
+
+  async verifyEmail(code: string): Promise<VerifyEmailOutput> {
+    try {
+      const verification = await this.verificationRepository.findOne({
+        where: { code },
+        relations: ['member'],
+      });
+      if (verification) {
+        verification.member.verified = true;
+        this.memberRepository.save(verification.member);
+      }
+    } catch (e) {
+      console.error(e);
+      return VerifyEmailOutput.error();
+    }
+
+    return VerifyEmailOutput.ok();
   }
 }
