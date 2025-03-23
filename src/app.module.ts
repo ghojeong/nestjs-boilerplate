@@ -47,7 +47,6 @@ function isLogging(): boolean {
         TOKEN_SECRET: Joi.string().required(),
         MAILGUN_API_KEY: Joi.string().required(),
         MAILGUN_DOMAIN_NAME: Joi.string().required(),
-        MAILGUN_FROM_EMAIL: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRoot({
@@ -65,7 +64,6 @@ function isLogging(): boolean {
     MailModule.forRoot({
       apiKey: process.env.MAILGUN_API_KEY as string,
       domainName: process.env.MAILGUN_DOMAIN_NAME as string,
-      fromEmail: process.env.MAILGUN_FROM_EMAIL as string,
     }),
     MemberModule,
     CommonModule,
