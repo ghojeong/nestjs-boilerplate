@@ -67,6 +67,7 @@ export class MemberService {
     try {
       const member = await this.memberRepository.findOne({
         where: { email, isDeleted: false },
+        select: ['id', 'password'],
       });
       if (!member?.id) {
         return LoginOutput.error('회원가입되어 있지 않은 계정입니다.');
@@ -124,15 +125,16 @@ export class MemberService {
         where: { code },
         relations: ['member'],
       });
-      if (verification) {
-        verification.member.verified = true;
-        this.memberRepository.save(verification.member);
+      if (!verification || !verification.member) {
+        return VerifyEmailOutput.error();
       }
+      verification.member.verified = true;
+      await this.memberRepository.save(verification.member);
+      await this.verificationRepository.delete(verification.id);
     } catch (e) {
       console.error(e);
       return VerifyEmailOutput.error();
     }
-
     return VerifyEmailOutput.ok();
   }
 }

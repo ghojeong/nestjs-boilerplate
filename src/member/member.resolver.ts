@@ -30,46 +30,46 @@ export class MemberResolver {
 
   @Query(() => MemberProfileOutput)
   @UseGuards(AuthGuard)
-  async memberProfile(
+  memberProfile(
     @Args() { memberId }: MemberProfileInput,
   ): Promise<MemberProfileOutput> {
-    return await this.memberService.findProfileById(memberId);
+    return this.memberService.findProfileById(memberId);
   }
 
   @Mutation(() => CreateMemberOutput)
-  async createMember(
+  createMember(
     @Args('input') input: CreateMemberInput,
   ): Promise<CreateMemberOutput> {
-    return await this.memberService.createMember(input);
+    return this.memberService.createMember(input);
   }
 
   @Mutation(() => LoginOutput)
-  async login(@Args('input') input: LoginInput): Promise<LoginOutput> {
-    return await this.memberService.login(input);
+  login(@Args('input') input: LoginInput): Promise<LoginOutput> {
+    return this.memberService.login(input);
   }
 
   @Mutation(() => EditProfileOutput)
   @UseGuards(AuthGuard)
-  async editProfile(
+  editProfile(
     @AuthMember() me: Member,
     @Args('input') input: EditProfileInput,
   ): Promise<EditProfileOutput> {
-    return await this.memberService.editProfile(me, input);
+    return this.memberService.editProfile(me, input);
   }
 
   @Mutation(() => ChangePasswordOutput)
   @UseGuards(AuthGuard)
-  async changePassword(
+  changePassword(
     @AuthMember() me: Member,
     @Args('input') input: ChangePasswordInput,
   ): Promise<ChangePasswordOutput> {
-    return await this.memberService.changePassword(me, input);
+    return this.memberService.changePassword(me, input);
   }
 
   @Mutation(() => VerifyEmailOutput)
-  async verifyEmail(
+  verifyEmail(
     @Args('input') { code }: VerifyEmailInput,
   ): Promise<VerifyEmailOutput> {
-    return await this.memberService.verifyEmail(code);
+    return this.memberService.verifyEmail(code);
   }
 }

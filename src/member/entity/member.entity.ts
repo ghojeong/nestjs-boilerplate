@@ -35,7 +35,7 @@ export class Member extends CoreEntity {
   @IsString()
   @Length(3, 100)
   @Field(() => String)
-  @Column()
+  @Column({ select: false })
   password: string;
 
   @IsEnum(MemberRole)
@@ -57,6 +57,9 @@ export class Member extends CoreEntity {
   @BeforeInsert()
   @BeforeUpdate()
   async hashPassword(): Promise<void> {
+    if (!this.password) {
+      return;
+    }
     try {
       this.password = await bcrypt.hash(this.password, 10);
     } catch (e) {
