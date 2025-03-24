@@ -17,6 +17,9 @@ import { AuthModule } from './auth/auth.module';
 import { AuthMiddleware } from './auth/auth.middleware';
 import { Verification } from './member/entity/verification.entity';
 import { MailModule } from './mail/mail.module';
+import { RestaurantModule } from './restaurant/restaurant.module';
+import { Restaurant } from './restaurant/entity/restaurant.entity';
+import { Category } from './restaurant/entity/category.entity';
 
 function isDeployable(): boolean {
   return ['prod', 'stage'].some((env) => env === process.env.NODE_ENV);
@@ -58,7 +61,7 @@ function isLogging(): boolean {
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [Member, Verification],
+      entities: [Member, Verification, Restaurant, Category],
     }),
     AuthModule.forRoot({ privateKey: process.env.TOKEN_SECRET as string }),
     MailModule.forRoot({
@@ -67,6 +70,7 @@ function isLogging(): boolean {
     }),
     MemberModule,
     CommonModule,
+    RestaurantModule,
   ],
   controllers: [],
   providers: [],
