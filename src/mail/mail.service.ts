@@ -10,18 +10,18 @@ export class MailService {
     @Inject(CONFIG_OPTIONS) private readonly options: MailModuleOptions,
   ) {}
 
-  sendVerificationEmail(
+  async sendVerificationEmail(
     memberName: string,
     memberEmail: string,
     memberCode: string,
   ) {
-    this.sendEmail(memberEmail, 'Verify Your Email', 'verify-email', [
+    await this.sendEmail(memberEmail, 'Verify Your Email', 'verify-email', [
       { key: 'memberName', value: memberName },
       { key: 'code', value: memberCode },
     ]);
   }
 
-  private async sendEmail(
+  async sendEmail(
     toEmail: string,
     subject: string,
     template: string,
