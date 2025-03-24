@@ -25,11 +25,31 @@ export class RestaurantService {
     try {
       const newRestaurant = this.restaurantRepository.create(input);
       newRestaurant.owner = owner;
+      const categoryName = input.categoryName.trim().toLowerCase();
+      const categorySlug = categoryName.replaceAll(/ /g, '-');
+      const category = await this.findOrCreateCategory(
+        categoryName,
+        categorySlug,
+      );
+      newRestaurant.category = category;
       await this.restaurantRepository.save(newRestaurant);
       return CreateRestaurantOutput.ok();
     } catch (e) {
       console.error(e);
       return CreateRestaurantOutput.error();
     }
+  }
+
+  private async findOrCreateCategory(
+    name: string,
+    slug: string,
+  ): Promise<Category> {
+    const category = await this.categoryRepository.findOneBy({ slug });
+    if (category) {
+      return category;
+    }
+    return await this.categoryRepository.save(
+      this.categoryRepository.create({ name, slug }),
+    );
   }
 }

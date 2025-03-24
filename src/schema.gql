@@ -8,7 +8,7 @@ type Category {
   createdAt: DateTime!
   updatedAt: DateTime!
   name: String!
-  coverImg: String!
+  slug: String!
   restaurants: [Restaurant!]!
 }
 
@@ -123,4 +123,5 @@ input CreateRestaurantInput {
   name: String!
   coverImg: String!
   address: String!
+  categoryName: String!
 }
