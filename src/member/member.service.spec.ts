@@ -26,6 +26,7 @@ const NEW_MEMBER = {
 };
 
 describe('UserService', () => {
+  let mailService: MailService;
   let memberService: MemberService;
   let memberRepository: MockRepository<Member>;
   let verificationRepository: MockRepository<Verification>;
@@ -69,7 +70,8 @@ describe('UserService', () => {
         },
       ],
     }).compile();
-    memberService = module.get(MemberService);
+    mailService = module.get<MailService>(MailService);
+    memberService = module.get<MemberService>(MemberService);
     memberRepository = module.get(getRepositoryToken(Member));
     verificationRepository = module.get(getRepositoryToken(Verification));
   });
@@ -82,12 +84,17 @@ describe('UserService', () => {
     it('회원가입에 성공한다.', async () => {
       // given: 가입되어 있지 않았다.
       memberRepository.exists?.mockResolvedValue(false);
+      memberRepository.create?.mockReturnValue(NEW_MEMBER);
+      verificationRepository.create?.mockReturnValue({
+        code: 'TEST_CODE',
+      });
 
       // when: 회원가입을 시도한다.
       const result = await memberService.createMember(NEW_MEMBER);
 
       // then: 회원가입에 성공한다.
       expect(memberRepository.save).toHaveBeenCalledTimes(1);
+      expect(memberRepository.save).toHaveBeenCalledWith(NEW_MEMBER);
       expect(memberRepository.create).toHaveBeenCalledTimes(1);
       expect(memberRepository.create).toHaveBeenCalledWith(NEW_MEMBER);
       expect(result).toMatchObject({ ok: true });
@@ -97,6 +104,13 @@ describe('UserService', () => {
       expect(verificationRepository.create).toHaveBeenCalledWith({
         member: NEW_MEMBER,
       });
+
+      expect(mailService.sendVerificationEmail).toHaveBeenCalledTimes(1);
+      expect(mailService.sendVerificationEmail).toHaveBeenCalledWith(
+        expect.any(String),
+        'new@email.com',
+        'TEST_CODE',
+      );
     });
 
     it('이미 가입되었다면 실패한다.', async () => {
